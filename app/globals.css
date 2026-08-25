@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Libre+Baskerville:wght@400;700&display=swap');
+
+:root{
+  --paper:#fbf5ef; --ink:#111111; --gold:#a56d23; --soft:#efe4d8; --muted:#776d64;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#171717;color:var(--ink);font-family:"Barlow Condensed",Arial,sans-serif}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+.muted{color:var(--muted)}
+.eyebrow{font-size:13px;letter-spacing:.16em;font-weight:800;margin:0 0 6px}
+.error{color:#a51f1f;font-weight:700}
+.login-shell{min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at top,#3a3129,#151515 60%)}
+.login-card{width:min(440px,100%);background:var(--paper);border:3px solid var(--ink);padding:42px;box-shadow:14px 14px 0 #000}
+.login-card h1{font-size:46px;margin:0 0 4px;letter-spacing:.04em}
+.login-card label{display:block;font-weight:800;font-size:14px;margin:20px 0}
+.login-card input,.create-row input{display:block;width:100%;border:0;border-bottom:2px solid var(--ink);background:transparent;padding:9px 2px;outline:none}
+.brand-mark{font-size:35px;color:var(--gold)}
+.gold-button,.ghost-button,.small-button,.danger-button{border:2px solid var(--ink);padding:10px 16px;font-weight:800;letter-spacing:.05em;background:var(--ink);color:#fff}
+.gold-button{background:var(--gold);border-color:var(--gold)}
+.ghost-button{background:transparent;color:var(--ink)}
+.master-shell{min-height:100vh;background:var(--paper);padding:40px max(22px,calc((100vw - 1180px)/2))}
+.master-header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid var(--ink);padding-bottom:25px}
+.master-header h1{font-size:46px;margin:0}
+.create-card{margin:30px 0;padding:25px;border:2px solid var(--gold);display:flex;gap:30px;align-items:end;justify-content:space-between;background:#fffaf5}
+.create-card h2{margin:0;font-size:25px}
+.create-row{display:flex;gap:12px;width:min(520px,100%)}
+.sheet-list{border-top:3px solid var(--ink);padding-top:20px}
+.section-heading{display:flex;justify-content:space-between;align-items:center}
+.section-heading h2{font-size:26px}
+.section-heading span{border:2px solid var(--ink);padding:4px 10px}
+.sheet-row{display:flex;align-items:center;gap:16px;border-bottom:1px solid #cdbdad;padding:15px 0}
+.sheet-avatar{width:48px;height:48px;display:grid;place-items:center;background:var(--ink);color:white;font-size:23px}
+.sheet-info{flex:1;display:flex;flex-direction:column}
+.sheet-info small{color:var(--muted)}
+.sheet-actions{display:flex;gap:8px;flex-wrap:wrap}
+.small-button{padding:8px 11px;font-size:13px}
+.danger-button{background:transparent;color:#8b1e1e;border-color:#8b1e1e;padding:8px 11px;font-size:13px}
+.empty-state{padding:40px;border:1px dashed var(--gold);text-align:center;color:var(--muted)}
+.sheet-page{background:#111;min-height:100vh;padding:20px}
+.sheet-page>*{max-width:1440px;margin-left:auto;margin-right:auto}
+.sheet-status{position:sticky;top:10px;z-index:20;width:max-content;margin-bottom:10px;background:var(--ink);color:#fff;border:1px solid var(--gold);padding:7px 12px;font-weight:700;font-size:12px;letter-spacing:.08em}
+.sheet-top,.sheet-grid,.second-page{background:var(--paper);border:4px solid var(--ink);padding:24px;position:relative}
+.sheet-top{display:grid;grid-template-columns:1.45fr .8fr .55fr;gap:20px;min-height:245px}
+.identity{display:grid;grid-template-columns:1fr 1.25fr;gap:8px 14px;align-content:start;padding-right:18px;border-right:2px solid var(--ink)}
+.field{display:block;min-width:0}
+.field span{font-weight:800;font-size:14px;display:block}
+.field input{width:100%;border:0;border-bottom:1.5px solid var(--ink);background:transparent;padding:6px 2px;outline:none}
+.field.wide{grid-column:span 1}
+.field.full{grid-column:1/-1}
+.change-panel,.hope-panel{padding:5px 10px;text-align:center}
+.banner,.ribbon{display:inline-block;background:var(--ink);color:#fff;border:3px solid var(--gold);padding:10px 28px;font-size:22px;font-weight:800;letter-spacing:.04em;position:relative}
+.change-panel h4,.hope-panel h4{font-size:13px;margin:12px 0 8px}
+.meter{display:flex;gap:3px;justify-content:center}
+.meter button{border:0;background:transparent;font-size:23px;line-height:1;padding:0;color:var(--ink)}
+.meter button.active{color:var(--gold);font-weight:900}
+.number-box{border:2px solid var(--ink);background:transparent;text-align:center;padding:8px;font-size:25px;font-weight:800;width:90px}
+.sheet-grid{display:grid;grid-template-columns:.9fr .85fr .85fr;gap:18px;border-top:0}
+.card{border:3px solid var(--ink);background:var(--paper);padding:20px;position:relative;min-height:500px}
+.pillar-card .ribbon,.language-card .ribbon,.techniques-card .ribbon{display:block;width:max-content;margin:-43px auto 20px}
+.pillar-grid{display:grid;grid-template-columns:1fr 1fr;margin-bottom:30px}
+.pillar-stat{text-align:center;border-bottom:1px solid var(--ink);padding:12px 4px}
+.pillar-stat:nth-child(odd){border-right:1px solid var(--ink)}
+.pillar-stat h3{text-transform:uppercase;font-size:16px;margin:0 0 9px}
+.competency-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.comp{display:flex;align-items:center;justify-content:space-between;gap:5px;margin:9px 0}
+.comp span{font-size:12px;font-weight:700}
+.diamond-meter button{font-size:16px}
+.stat-row{display:grid;grid-template-columns:1fr .7fr 1fr;gap:12px}
+.stat-row .full{grid-column:1/-1}
+.box-textarea{border:2px solid var(--gold);padding:12px;margin-top:20px;min-height:160px}
+.box-textarea input{min-height:105px;border:0;white-space:normal}
+.portrait-card{display:flex;flex-direction:column;justify-content:space-between}
+.portrait-frame{border:2px solid var(--gold);height:100%;min-height:430px;display:grid;place-items:center;position:relative;overflow:hidden}
+.portrait-frame img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.portrait-frame>span{font-size:24px;font-weight:800;z-index:1}
+.upload-button{position:absolute;bottom:12px;z-index:2;background:var(--ink);color:#fff;padding:9px 12px;font-weight:800;font-size:12px}
+.upload-button input{display:none}
+.condition-area{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:10px;margin-top:14px}
+.condition-list{display:flex;flex-direction:column;gap:5px;font-size:12px;font-weight:700}
+.numeric-card{display:block;text-align:center;font-weight:800}
+.numeric-card span{display:block;font-size:13px}
+.numeric-card input{width:100%;border:2px solid var(--ink);padding:10px;text-align:center;background:transparent;font-size:20px}
+.second-page{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;border-top:0;margin-bottom:20px}
+.language-card,.techniques-card{min-height:820px}
+.language-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;border-bottom:2px solid var(--gold);padding-bottom:18px}
+.language-grid h2{font-family:"Libre Baskerville",serif;font-size:21px;margin:0 0 12px}
+.language-grid p{border:2px solid var(--ink);padding:7px;margin:5px 0;font-weight:700}
+.big-text{display:block;margin-top:18px}
+.big-text>span{display:block;font-weight:800;font-size:18px;margin-bottom:6px}
+.big-text textarea{width:100%;min-height:130px;resize:vertical;border:2px solid var(--gold);background:transparent;padding:12px;outline:none}
+.technique-input textarea{min-height:600px}
+@media(max-width:1050px){
+ .sheet-top{grid-template-columns:1fr 1fr}
+ .identity{grid-column:1/-1;border-right:0;border-bottom:2px solid var(--ink);padding-bottom:15px}
+ .sheet-grid{grid-template-columns:1fr}
+ .second-page{grid-template-columns:1fr}
+}
+@media(max-width:650px){
+ .sheet-page{padding:8px}
+ .sheet-top,.sheet-grid,.second-page{padding:14px;border-width:2px}
+ .sheet-top{grid-template-columns:1fr}
+ .identity{grid-template-columns:1fr}
+ .identity .full{grid-column:auto}
+ .banner,.ribbon{font-size:18px;padding:8px 16px}
+ .competency-grid{grid-template-columns:1fr}
+ .stat-row{grid-template-columns:1fr}
+ .sheet-row{align-items:flex-start;flex-wrap:wrap}
+ .sheet-actions{width:100%}
+ .create-card,.create-row{flex-direction:column;align-items:stretch}
+ .condition-area{grid-template-columns:1fr 1fr}
+ .condition-list{grid-column:1/-1}
+}
