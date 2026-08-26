@@ -9,6 +9,7 @@ export const defaultSheet: SheetData = {
   conexao: "",
   experiencia: "",
   primeiraMorte: "",
+  anotacoes: "",
   eventosMudanca: 0,
   esperanca: 0,
   pilar: { impeto: 0, resolucao: 0, instinto: 0, cognicao: 0 },

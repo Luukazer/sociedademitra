@@ -7,6 +7,7 @@ export type SheetData = {
   conexao: string;
   experiencia: string;
   primeiraMorte: string;
+  anotacoes: string;
   eventosMudanca: number;
   esperanca: number;
   pilar: {

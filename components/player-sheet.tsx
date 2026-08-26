@@ -8,7 +8,18 @@ const compRight = ["Investigação","Medicina","Ofício","Primor","Propósito","
 
 function Meter({ value, max=5, onChange, diamond=false }: { value:number; max?:number; onChange:(n:number)=>void; diamond?:boolean }) {
   return <div className={`meter ${diamond ? "diamond-meter" : ""}`}>
-    {Array.from({length:max}).map((_,i)=><button type="button" key={i} className={i < value ? "active" : ""} onClick={()=>onChange(i+1)} aria-label={`${i+1}`}>{diamond ? "◇" : "○"}</button>)}
+    {Array.from({length:max}).map((_,i)=>{
+      const selected = i < value;
+      const isLastSelected = i === value - 1;
+      return <button
+        type="button"
+        key={i}
+        className={selected ? "active" : ""}
+        onClick={()=>onChange(isLastSelected ? 0 : i + 1)}
+        aria-pressed={selected}
+        aria-label={selected ? `Desmarcar ${i+1}` : `Marcar ${i+1}`}
+      >{diamond ? (selected ? "◆" : "◇") : (selected ? "●" : "○")}</button>;
+    })}
   </div>
 }
 
@@ -66,6 +77,7 @@ export default function PlayerSheet({ sheet: initial }: { sheet: Sheet }) {
   }
 
   const d = sheet.data;
+  const anotacoes = d.anotacoes ?? "";
 
   return (
     <main className="sheet-page">
@@ -86,12 +98,16 @@ export default function PlayerSheet({ sheet: initial }: { sheet: Sheet }) {
         <div className="change-panel">
           <div className="banner">EVENTOS DE MUDANÇA</div>
           <h4>PONTOS DE EXPERIÊNCIA</h4>
-          <Meter value={d.eventosMudanca} max={10} onChange={n=>patch({eventosMudanca:n})}/>
+          <Meter value={d.eventosMudanca} max={24} onChange={n=>patch({eventosMudanca:n})}/>
         </div>
         <div className="hope-panel">
           <div className="banner">ESPERANÇA</div>
           <h4>ATIVE HABILIDADES OU GASTE 2PE = +2D</h4>
-          <input className="number-box hope" type="number" value={d.esperanca} onChange={e=>patch({esperanca:Number(e.target.value)})}/>
+          <input className="number-box hope" type="number" min="0" value={d.esperanca} onChange={e=>patch({esperanca:Number(e.target.value)})}/>
+        </div>
+        <div className="notes-panel">
+          <div className="banner">ANOTAÇÕES</div>
+          <textarea value={anotacoes} onChange={e=>patch({anotacoes:e.target.value})} placeholder="Anotações..." />
         </div>
       </section>
 
@@ -117,8 +133,8 @@ export default function PlayerSheet({ sheet: initial }: { sheet: Sheet }) {
             <TextField label="ALCANCE:" value={d.alcance} onChange={v=>patch({alcance:v})}/>
             <TextField label="HABILIDADE:" value={d.habilidade} onChange={v=>patch({habilidade:v})} className="full"/>
           </div>
-          <TextField label="ACESSÓRIO:" value={d.acessorio} onChange={v=>patch({acessorio:v})} className="box-textarea"/>
-          <TextField label="FERRAMENTAS" value={d.ferramentas} onChange={v=>patch({ferramentas:v})} className="box-textarea"/>
+          <label className="box-textarea"><span>ACESSÓRIO:</span><textarea value={d.acessorio} onChange={e=>patch({acessorio:e.target.value})} /></label>
+          <label className="box-textarea"><span>FERRAMENTAS</span><textarea value={d.ferramentas} onChange={e=>patch({ferramentas:e.target.value})} /></label>
         </div>
 
         <div className="card portrait-card">
@@ -145,8 +161,26 @@ export default function PlayerSheet({ sheet: initial }: { sheet: Sheet }) {
             <div><h2>Alvos</h2><p>LU — HUMANO</p><p>KIB — OBJETO</p><p>UDUG — CORROMPIDO</p><p>NAGU — ZONA</p></div>
             <div><h2>Duração</h2><p>HAMTA — INSTANTÂNEO</p><p>TAHAZU — CENA</p><p>UDA — MOMENTOS</p></div>
           </div>
-          <label className="big-text"><span>AÇÕES</span><textarea value={d.idioma.acoes} onChange={e=>setNested("idioma",{...d.idioma,acoes:e.target.value})} placeholder="Descreva as ações e combinações do seu Idioma Singular..." /></label>
-          <label className="big-text"><span>MARCAS</span><textarea value={d.marcas} onChange={e=>patch({marcas:e.target.value})}/></label>
+          <div className="actions-section">
+            <div className="actions-title"><h2>Ações</h2><span>/ Aumente 1 de pressão por palavra escolhida /</span></div>
+            <div className="actions-grid">
+              {[
+                ["GU","ABSORVER"],["SELU","AFIAR"],["DE","AUMENTAR"],
+                ["BALA","ATRAVESSAR"],["TIL","BUSCAR"],["KI","CALOR"],
+                ["NAG","CALCULAR"],["KIDU","CONECTAR"],["KUS","CRESCER"],
+                ["DUG","CRIAR"],["UR","DIMINUIR"],["GUR","DIVIDIR"],
+                ["SUM","DOMINAR"],["ZID","ENDURECER"],["TUG","ENVOLVER"],
+                ["RU","ENVIAR"],["HARSAG","ESPALHAR"],["KAR","FASCINAR"],
+                ["IDA","FRIO"],["NIG","INSPIRAR"],["NISSU","IMATERIAL"],
+                ["ZU","LEMBRAR"],["SUB","MANTER"],["US","MANIPULAR"],
+                ["SA","MERGULHAR"],["UZ","MULTIPLICAR"],["UR","PERFURAR"],
+                ["BIR","RASGAR"],["PAS","REGREDIR"],["TUR","REORGANIZAR"],
+                ["BIL","REPELIR"],["GURUN","REVESTIR"],["SID","TRANSFORMAR"]
+              ].map(([word, meaning])=><div className="action-pill" key={`${word}-${meaning}`}><span className="action-symbol">◇</span><b>{word}</b><span>{meaning}</span></div>)}
+            </div>
+          </div>
+          <label className="big-text"><span>AÇÕES PERSONALIZADAS</span><textarea value={d.idioma.acoes} onChange={e=>setNested("idioma",{...d.idioma,acoes:e.target.value})} placeholder="Anote combinações ou usos personalizados..." /></label>
+          <label className="big-text"><span>MARCAS:</span><textarea value={d.marcas} onChange={e=>patch({marcas:e.target.value})}/></label>
         </div>
         <div className="card techniques-card">
           <div className="ribbon">TÉCNICAS</div>
