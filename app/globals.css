@@ -43,10 +43,31 @@ a{color:inherit;text-decoration:none}
 .sheet-status{position:sticky;top:10px;z-index:20;width:max-content;margin-bottom:10px;background:var(--ink);color:#fff;border:1px solid var(--gold);padding:7px 12px;font-weight:700;font-size:12px;letter-spacing:.08em}
 .sheet-top,.sheet-grid,.second-page{background:var(--paper);border:4px solid var(--ink);padding:24px;position:relative}
 .sheet-top{display:grid;grid-template-columns:1.55fr .78fr .52fr;grid-template-rows:auto auto;gap:18px;min-height:270px}
-.identity{display:grid;grid-template-columns:1fr 1.25fr;gap:8px 14px;align-content:start;align-self:start;justify-self:stretch;width:100%;padding-right:18px;border-right:2px solid var(--ink);text-align:left}
-.field{display:block;min-width:0}
-.field span{font-weight:800;font-size:14px;display:block}
-.field input{width:100%;border:0;border-bottom:1.5px solid var(--ink);background:transparent;padding:6px 2px;outline:none}
+.identity{
+  display:grid;
+  grid-template-columns:1fr 1.25fr;
+  gap:8px 14px;
+  align-content:start;
+  align-self:start;
+  justify-self:stretch;
+  width:100%;
+  padding-right:18px;
+  border-right:2px solid var(--ink);
+  text-align:left !important;
+  justify-items:stretch;
+}
+
+.identity .field{
+  text-align:left !important;
+}
+
+.identity .field span{
+  text-align:left !important;
+}
+
+.identity .field input{
+  text-align:left !important;
+}
 .field.wide{grid-column:span 1}
 .field.full{grid-column:1/-1}
 .change-panel,.hope-panel,.notes-panel{padding:5px 10px;text-align:center;display:flex;flex-direction:column;align-items:center}.change-panel,.hope-panel{align-self:start}.notes-panel{grid-column:1/-1;width:100%;border-left:0;border-top:1px solid var(--gold);padding:14px 0 0;align-self:stretch}
