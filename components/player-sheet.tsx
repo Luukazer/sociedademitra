@@ -84,7 +84,6 @@ export default function PlayerSheet({ sheet: initial }: { sheet: Sheet }) {
       <div className="sheet-status">{status}</div>
 
       <section className="sheet-top">
-        <div className="ornament corner-left">╲╱</div>
         <div className="identity">
           <TextField label="CODINOME:" value={d.codinome} onChange={v=>patch({codinome:v})}/>
           <TextField label="NOME:" value={d.nome} onChange={v=>patch({nome:v})} className="wide"/>
