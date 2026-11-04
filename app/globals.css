@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Libre+Baskerville:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700;800&display=swap');
 
 :root{
   --paper:#fbf5ef; --ink:#111111; --gold:#a56d23; --soft:#efe4d8; --muted:#776d64;
@@ -112,3 +113,87 @@ a{color:inherit;text-decoration:none}
  .actions-title{flex-wrap:wrap}
  .condition-list{grid-column:1/-1}
 }
+
+/* ================================================= */
+/* PAINEL DE ROLAGEM E INTEGRIDADE (na ficha)         */
+/* ================================================= */
+.live-section{background:var(--paper);border:4px solid var(--ink);border-top:0;padding:24px;display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
+.live-section .card{min-height:0;padding-top:30px}
+.live-section .ribbon{display:block;width:max-content;margin:-43px auto 18px}
+.roll-controls{display:grid;grid-template-columns:140px 1fr auto;gap:18px;align-items:end}
+.roll-controls .field input{border:2px solid var(--ink);padding:9px;text-align:center;font-size:20px;font-weight:800}
+.roll-options{display:flex;gap:16px;flex-wrap:wrap;font-weight:800;font-size:14px;padding-bottom:10px}
+.roll-options label{display:flex;align-items:center;gap:6px}
+.live-section .error{margin:12px 0 0}
+.roll-result{margin-top:18px;border-top:2px solid var(--gold);padding-top:14px;text-align:center}
+.dice-list{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;font-size:22px;font-weight:800}
+.die-one{color:#a51f1f;text-shadow:0 0 1px #a51f1f}
+.die-twelve{color:#1f7a3a;text-shadow:0 0 1px #1f7a3a}
+.success-count{font-size:54px;font-weight:800;line-height:1.1;margin-top:8px}
+.success-label{font-size:16px;font-weight:800;letter-spacing:.08em}
+.vital{border:2px solid var(--ink);padding:12px 14px;margin-top:14px}
+.vital h4{margin:0 0 8px;font-size:15px;letter-spacing:.06em;text-transform:uppercase}
+.vital-dano{border-color:#8b1e1e}.vital-dano h4{color:#8b1e1e}
+.vital-pressao{border-color:var(--gold)}.vital-pressao h4{color:var(--gold)}
+.vital-row{display:flex;align-items:center;gap:8px}
+.vital-row .number-box{width:72px;padding:6px;font-size:22px}
+.vital-sep{font-size:22px;font-weight:800}
+.vital-btn{width:38px;height:38px;border:2px solid var(--ink);background:var(--ink);color:#fff;font-size:22px;font-weight:800;line-height:1;padding:0}
+.vital-dano .vital-btn{background:#8b1e1e;border-color:#8b1e1e}
+.vital-pressao .vital-btn{background:var(--gold);border-color:var(--gold)}
+@media(max-width:1050px){.live-section{grid-template-columns:1fr}}
+@media(max-width:650px){.live-section{padding:14px;border-width:2px;border-top:0}.roll-controls{grid-template-columns:1fr}}
+
+/* ================================================= */
+/* ABA DO MESTRE: nomenclatura, renomear, histórico   */
+/* ================================================= */
+.labels-card{margin:0 0 30px;border:2px solid var(--gold);background:#fffaf5;padding:0 25px}
+.labels-card details{padding:20px 0}
+.labels-card summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:20px;cursor:pointer}
+.labels-card summary::-webkit-details-marker{display:none}
+.labels-card summary strong{display:block;font-size:25px}
+.labels-group{margin-top:22px}
+.labels-group h3{margin:0 0 10px;font-size:20px;border-bottom:2px solid var(--ink);padding-bottom:4px}
+.labels-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px 18px}
+.labels-item{display:block}
+.labels-item small{display:block;color:var(--muted);font-weight:700;margin-bottom:2px}
+.labels-item input,.rename-input{display:block;width:100%;border:0;border-bottom:2px solid var(--ink);background:transparent;padding:7px 2px;outline:none}
+.labels-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:24px}
+.labels-actions button:disabled,.gold-button:disabled{opacity:.5;cursor:default}
+.sheet-block{border-bottom:1px solid #cdbdad}
+.sheet-block .sheet-row{border-bottom:0}
+.small-button.ghost{background:transparent;color:var(--ink)}
+.master-notice{margin:8px 0}
+.history-panel{background:#fffaf5;border:1px solid #cdbdad;padding:14px 18px;margin:0 0 16px;max-height:340px;overflow:auto}
+.history-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px}
+.history-item{border-top:1px solid #e3d6c8;padding:8px 0}
+.history-item small{color:var(--muted)}
+
+/* ================================================= */
+/* OBS (rotas /obs/[id]/...) — portado de style.css    */
+/* ================================================= */
+.obs-stage{position:relative;width:1920px;height:1080px}
+.dice-wrapper{position:absolute;top:340px;left:760px;width:400px;height:400px;opacity:0;transition:opacity .6s ease}
+.dice-wrapper.show{opacity:1}
+.obs-dice-video{width:100%;height:100%;object-fit:contain}
+.obs-result{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;color:#fff;text-shadow:0 0 8px #fff,0 0 16px #fff,0 0 24px rgba(255,255,255,.8)}
+.obs-success-count{font-size:140px;font-weight:bold;color:#fff}
+.alignment-dots{display:flex;align-items:center;justify-content:center;gap:8px;min-height:20px;margin-top:8px}
+.order-dot,.chaos-dot{width:14px;height:14px;border-radius:50%;display:block}
+.order-dot{background:#2bff6a;box-shadow:0 0 6px #2bff6a,0 0 12px rgba(43,255,106,.8)}
+.chaos-dot{background:#ff2b2b;box-shadow:0 0 6px #ff2b2b,0 0 12px rgba(255,43,43,.8)}
+
+.obs-integrity-stage{font-family:'League Spartan',sans-serif;position:absolute;inset:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:6px;padding-left:50%;transform:rotate(-13deg)}
+.obs-integrity-stage .obs-stat{font-size:64px;font-weight:700;display:flex;align-items:center}
+.obs-integrity-stage .obs-stat.damage{color:#fff;text-shadow:0 0 6px #ff2b2b,0 0 12px #ff2b2b,0 0 24px rgba(255,43,43,.9)}
+.obs-integrity-stage .obs-stat.pressure{color:#fff;text-shadow:0 0 6px #ffd42b,0 0 12px #ffd42b,0 0 24px rgba(255,212,43,.9)}
+.obs-integrity-stage .slash{margin:0 6px}
+.obs-integrity-stage .warning{animation-duration:1.6s;animation-iteration-count:infinite;animation-timing-function:ease-in-out}
+.obs-integrity-stage .obs-stat.damage.warning{animation-name:pulseGlowRed}
+.obs-integrity-stage .obs-stat.pressure.warning{animation-name:pulseGlowYellow}
+.obs-integrity-stage .obs-stat.impact{animation:statImpact .25s ease-out}
+@keyframes pulseGlowRed{0%{text-shadow:0 0 8px rgba(255,40,40,.6),0 0 14px rgba(255,40,40,.4)}50%{text-shadow:0 0 14px rgba(255,40,40,.9),0 0 24px rgba(255,40,40,.7)}100%{text-shadow:0 0 8px rgba(255,40,40,.6),0 0 14px rgba(255,40,40,.4)}}
+@keyframes pulseGlowYellow{0%{text-shadow:0 0 8px rgba(255,220,40,.6),0 0 14px rgba(255,220,40,.4)}50%{text-shadow:0 0 14px rgba(255,220,40,.9),0 0 24px rgba(255,220,40,.7)}100%{text-shadow:0 0 8px rgba(255,220,40,.6),0 0 14px rgba(255,220,40,.4)}}
+@keyframes statImpact{0%{transform:translateX(0) scale(1)}40%{transform:translateX(3px) scale(1.08)}100%{transform:translateX(0) scale(1)}}
+.obs-integrity-stage .obs-stat.damage.warning.impact{animation:statImpact .25s ease-out,pulseGlowRed 1.6s ease-in-out infinite}
+.obs-integrity-stage .obs-stat.pressure.warning.impact{animation:statImpact .25s ease-out,pulseGlowYellow 1.6s ease-in-out infinite}

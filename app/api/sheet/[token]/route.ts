@@ -20,9 +20,15 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ token:
   const { data: current } = await supabase.from("sheets").select("id").eq("token", token).maybeSingle();
   if (!current) return NextResponse.json({ error: "Ficha não encontrada." }, { status: 404 });
 
+  if (!body.data || typeof body.data !== "object") return NextResponse.json({ error: "Dados inválidos." }, { status: 400 });
+
+  // O título só acompanha o nome do personagem quando ele foi preenchido (evita sobrescrever renomeações do Mestre).
+  const update: { data: unknown; title?: string } = { data: body.data };
+  if (typeof body.title === "string" && body.title.trim()) update.title = body.title.trim().slice(0, 120);
+
   const { data, error } = await supabase
     .from("sheets")
-    .update({ data: body.data, title: String(body.title || "Ficha").slice(0, 120) })
+    .update(update)
     .eq("id", current.id)
     .select("*")
     .single();

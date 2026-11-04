@@ -50,3 +50,43 @@ export type Sheet = {
   created_at: string;
   updated_at: string;
 };
+
+/** Última rolagem publicada para o OBS (guardada em sheet_live.last_roll). */
+export type LastRoll = {
+  id: string;
+  results: number[];
+  successes: number;
+  alignment: "Ordem" | "Caos" | "Normal";
+  ordem3: boolean;
+  vantagem: boolean;
+  desvantagem: boolean;
+  timestamp: number;
+};
+
+/** Estado ao vivo de uma ficha: Índice de Dano, Pressão e última rolagem. Fonte única para ficha e OBS. */
+export type LiveState = {
+  dano_atual: number;
+  dano_total: number;
+  pressao_atual: number;
+  pressao_total: number;
+  last_roll: LastRoll | null;
+};
+
+export const emptyLive: LiveState = {
+  dano_atual: 0,
+  dano_total: 0,
+  pressao_atual: 0,
+  pressao_total: 0,
+  last_roll: null
+};
+
+export type RollRecord = {
+  id: number;
+  results: number[];
+  successes: number;
+  alignment: string;
+  ordem3: boolean;
+  vantagem: boolean;
+  desvantagem: boolean;
+  created_at: string;
+};
