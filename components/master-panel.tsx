@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { RollRecord, Sheet } from "@/lib/types";
 import LabelsEditor from "./labels-editor";
+import { readApi } from "@/lib/api";
 
 export default function MasterPanel({ initialUser }: { initialUser: string | null }) {
   const router = useRouter();
@@ -35,7 +36,9 @@ export default function MasterPanel({ initialUser }: { initialUser: string | nul
   async function removeSheet(id: string) {
     if (!confirm("Excluir esta ficha? Esta ação não pode ser desfeita.")) return;
     const r = await fetch(`/api/sheets/${id}`, { method:"DELETE" });
-    if (r.ok) setSheets(prev => prev.filter(s => s.id !== id));
+    const x = await readApi(r);
+    if (x.ok) setSheets(prev => prev.filter(s => s.id !== id));
+    else flash(`Não foi possível excluir: ${x.error}`);
   }
 
   async function renameSheet(id: string) {
@@ -68,7 +71,7 @@ export default function MasterPanel({ initialUser }: { initialUser: string | nul
 
   function flash(text: string) {
     setNotice(text);
-    setTimeout(() => setNotice(""), 3500);
+    setTimeout(() => setNotice(""), 8000);
   }
 
   function copy(text: string, label: string) {

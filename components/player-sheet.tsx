@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { LiveState, Sheet, SheetData } from "@/lib/types";
 import { COMP_LEFT as compLeft, COMP_RIGHT as compRight, DEFAULT_LABELS, type Labels } from "@/lib/labels";
 import LivePanel from "./live-panel";
+import { networkError, readApi } from "@/lib/api";
 
 function Meter({ value, max=5, onChange, diamond=false }: { value:number; max?:number; onChange:(n:number)=>void; diamond?:boolean }) {
   return <div className={`meter ${diamond ? "diamond-meter" : ""}`}>
@@ -43,11 +44,16 @@ export default function PlayerSheet({ sheet: initial, labels, live }: { sheet: S
     setStatus("SALVANDO...");
     if (timer.current) clearTimeout(timer.current);
     timer.current = setTimeout(async () => {
-      const r = await fetch(`/api/sheet/${sheet.token}`, {
-        method:"PATCH", headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({data:sheet.data, title:sheet.data.nome?.trim() || undefined})
-      });
-      setStatus(r.ok ? "✓ SALVO" : "ERRO AO SALVAR");
+      try {
+        const r = await fetch(`/api/sheet/${sheet.token}`, {
+          method:"PATCH", headers:{"Content-Type":"application/json"},
+          body:JSON.stringify({data:sheet.data, title:sheet.data.nome?.trim() || undefined})
+        });
+        const x = await readApi(r);
+        setStatus(x.ok ? "✓ SALVO" : `ERRO AO SALVAR (${x.status}): ${x.error}`);
+      } catch (e) {
+        setStatus(`ERRO AO SALVAR: ${networkError(e)}`);
+      }
     }, 450);
     return () => { if (timer.current) clearTimeout(timer.current); };
     // eslint-disable-next-line react-hooks/exhaustive-deps

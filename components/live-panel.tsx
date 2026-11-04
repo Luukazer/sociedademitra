@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { Labels } from "@/lib/labels";
 import type { LastRoll, LiveState } from "@/lib/types";
+import { networkError, readApi } from "@/lib/api";
 
 type StatKey = "dano" | "pressao";
 
@@ -25,9 +26,9 @@ export default function LivePanel({ token, labels: L, initial }: { token: string
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ qtd, ordem3, vantagem, desvantagem })
       });
-      const x = await r.json();
-      if (r.ok) setRoll(x.roll); else setError(x.error || "Erro ao rolar.");
-    } catch { setError("Sem conexão."); }
+      const x = await readApi<{ roll: LastRoll }>(r);
+      if (x.ok) setRoll(x.data.roll); else setError(x.error);
+    } catch (e) { setError(networkError(e)); }
     setRolling(false);
   }
 
@@ -37,9 +38,9 @@ export default function LivePanel({ token, labels: L, initial }: { token: string
       const r = await fetch(`/api/sheet/${token}/vitals`, {
         method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body)
       });
-      const x = await r.json();
-      if (r.ok) setLive(s => ({ ...s, ...x.live })); else setError(x.error || "Erro ao salvar.");
-    } catch { setError("Sem conexão."); }
+      const x = await readApi<{ live: LiveState }>(r);
+      if (x.ok) setLive(s => ({ ...s, ...x.data.live })); else setError(x.error);
+    } catch (e) { setError(networkError(e)); }
   }
 
   function setField(field: keyof LiveState, apiKey: string, raw: string) {
