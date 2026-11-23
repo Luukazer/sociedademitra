@@ -17,6 +17,21 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ token:
   if (!body || typeof body !== "object") return NextResponse.json({ error: "Dados inválidos." }, { status: 400 });
 
   const admin = createAdminClient();
+
+  // Caminho rápido: soma/subtrai direto no banco, numa única operação atômica (requer supabase/migration-sync-ficha.sql).
+  // Se a função ainda não existir, cai no caminho antigo logo abaixo, então nada deixa de funcionar.
+  if (body.stat === "dano" || body.stat === "pressao") {
+    const quick = Number(body.delta);
+    if (!Number.isFinite(quick)) return NextResponse.json({ error: "Delta inválido." }, { status: 400 });
+    const { data: fast, error: fastError } = await admin.rpc("adjust_live_by_token", {
+      p_token: token,
+      p_stat: body.stat,
+      p_delta: Math.max(-9999, Math.min(Math.trunc(quick), 9999))
+    });
+    if (!fastError && fast) return NextResponse.json({ live: fast });
+    if (fastError && /sheet_not_found/.test(fastError.message)) return NextResponse.json({ error: "Ficha não encontrada." }, { status: 404 });
+  }
+
   const { data: sheet } = await admin.from("sheets").select("id").eq("token", token).maybeSingle();
   if (!sheet) return NextResponse.json({ error: "Ficha não encontrada." }, { status: 404 });
 

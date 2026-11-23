@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { Labels } from "@/lib/labels";
 import type { LastRoll, LiveState } from "@/lib/types";
 import { networkError, readApi } from "@/lib/api";
+import { useLiveState } from "./use-live-state";
 
 type StatKey = "dano" | "pressao";
 
-export default function LivePanel({ token, labels: L, initial }: { token: string; labels: Labels; initial: LiveState }) {
+export default function LivePanel({ token, sheetId, labels: L, initial }: { token: string; sheetId: string; labels: Labels; initial: LiveState }) {
   const [qtd, setQtd] = useState(1);
   const [ordem3, setOrdem3] = useState(false);
   const [vantagem, setVantagem] = useState(false);
@@ -16,6 +17,21 @@ export default function LivePanel({ token, labels: L, initial }: { token: string
   const [roll, setRoll] = useState<LastRoll | null>(null);
   const [error, setError] = useState("");
   const [live, setLive] = useState(initial);
+  // Quantos pedidos de Dano/Pressão ainda estão a caminho do servidor. Enquanto houver algum, ignoramos
+  // atualizações vindas de fora para o número não "pular" para trás no meio de cliques rápidos.
+  const inFlight = useRef(0);
+
+  // Mantém Dano/Pressão em sincronia com o que outros jogadores (ou o Mestre) alteram.
+  useLiveState(sheetId, s => {
+    if (inFlight.current > 0) return;
+    if (typeof document !== "undefined" && document.activeElement?.closest(".vital")) return; // não atropela quem está digitando
+    setLive(prev =>
+      prev.dano_atual === s.dano_atual && prev.dano_total === s.dano_total &&
+      prev.pressao_atual === s.pressao_atual && prev.pressao_total === s.pressao_total
+        ? prev
+        : { ...prev, ...s }
+    );
+  });
 
   async function rollDice() {
     setError("");
@@ -34,13 +50,24 @@ export default function LivePanel({ token, labels: L, initial }: { token: string
 
   async function sendVitals(body: object) {
     setError("");
+    inFlight.current++;
     try {
       const r = await fetch(`/api/sheet/${token}/vitals`, {
         method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body)
       });
       const x = await readApi<{ live: LiveState }>(r);
-      if (x.ok) setLive(s => ({ ...s, ...x.data.live })); else setError(x.error);
+      // Só a última resposta é a "verdade": respostas antigas não sobrescrevem cliques mais novos.
+      if (x.ok) { if (inFlight.current === 1) setLive(s => ({ ...s, ...x.data.live })); } else setError(x.error);
     } catch (e) { setError(networkError(e)); }
+    inFlight.current--;
+  }
+
+  /** + / −: mostra o novo valor na hora e confirma com o servidor em seguida. */
+  function bump(key: StatKey, delta: number) {
+    const cur = key === "dano" ? "dano_atual" : "pressao_atual";
+    const tot = key === "dano" ? "dano_total" : "pressao_total";
+    setLive(s => ({ ...s, [cur]: Math.max(0, Math.min(s[cur] + delta, s[tot])) }));
+    sendVitals({ stat: key, delta });
   }
 
   function setField(field: keyof LiveState, apiKey: string, raw: string) {
@@ -58,7 +85,7 @@ export default function LivePanel({ token, labels: L, initial }: { token: string
       <div className={`vital vital-${key}`}>
         <h4>{title}</h4>
         <div className="vital-row">
-          <button type="button" className="vital-btn" aria-label="Diminuir" onClick={() => sendVitals({ stat: key, delta: -1 })}>−</button>
+          <button type="button" className="vital-btn" aria-label="Diminuir" onClick={() => bump(key, -1)}>−</button>
           <input
             className="number-box" type="number" min={0} value={live[cur]}
             onChange={e => setField(cur, apiCur, e.target.value)}
@@ -70,7 +97,7 @@ export default function LivePanel({ token, labels: L, initial }: { token: string
             onChange={e => setField(tot, apiTot, e.target.value)}
             onBlur={e => sendVitals({ values: { [apiTot]: Math.max(0, parseInt(e.target.value, 10) || 0) } })}
           />
-          <button type="button" className="vital-btn" aria-label="Aumentar" onClick={() => sendVitals({ stat: key, delta: 1 })}>+</button>
+          <button type="button" className="vital-btn" aria-label="Aumentar" onClick={() => bump(key, 1)}>+</button>
         </div>
       </div>
     );
